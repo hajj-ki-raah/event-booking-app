@@ -1,0 +1,168 @@
+<html>
+
+
+<head>
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+
+    <link href="assets/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="/manifest.json">
+</head>
+
+<body>
+<nav class="navbar bg-primary sticky-top" style="position: unset">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="color: white; text-decoration: none">
+            Events Booking App
+        </a>
+    </div>
+</nav>
+
+<nav class="navbar navbar-expand navbar-dark">
+    <ul class="navbar-nav w-100 d-flex justify-content-around">
+
+        <li class="nav-item">
+            <a class="nav-link" href="index.html">
+                <i class="fas fa-calendar-alt navbar-icon"></i><br>
+                Events
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="profile.html">
+                <i class="fas fa-user navbar-icon"></i><br>
+                Profile
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="bookings.html">
+                <i class="fas fa-book navbar-icon"></i><br>
+                Bookings
+            </a>
+        </li>
+    </ul>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <br>
+            <h4 class="text-center">Booked Event - Sucessfully : <span id="eventName"></span></h4>
+            <div class="card">
+                <div class="card-body">
+                    <!--           Event Detail Table     -->
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Event Name</td>
+                            <td id="eventName2"></td>
+                        </tr>
+                        <tr>
+                            <td>Event Date</td>
+                            <td id="eventDate"></td>
+                        </tr>
+                        <tr>
+                            <td>Event Time</td>
+                            <td id="eventTime"></td>
+                        </tr>
+                        <tr>
+                            <td>Event Venue</td>
+                            <td id="eventVenue"></td>
+                        </tr>
+                        <tr>
+                            <td>Event Price</td>
+                            <td id="eventPrice"></td>
+                        </tr>
+                    </table>
+
+                </div>
+
+                <hr>
+                <h6 class="text-center">Booker Details</h6>
+                <div class="card-body">
+
+<!--                    bookerdetails table-->
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Name</td>
+                            <td><input type="text" id="name" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td><input type="email" id="email" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td>Phone</td>
+                            <td><input type="text" id="phone" class="form-control"></td>
+                        </tr>
+                    </table>
+<!--                    ticket qr code-->
+                    <div class="text-center">
+                        <img alt="QR Code" id="qr" class="img-fluid">
+                    </div>
+
+                </div>
+                <button  type="button" id="print ticket" class="btn btn-primary p-2 m-2
+">print</button>
+            </div>
+        </div>
+
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+
+</body>
+
+
+<script src="assets/js/firebaseConfig.js"></script>
+
+<script>
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookingid = urlParams.get('bookingId');
+
+    const db = firebase.database();
+
+//     fetch Booking data
+    db.ref('bookings/' + bookingid).get().then(async (snapshot) => {
+        if (snapshot.exists()) {
+            let booking = snapshot.val();
+            console.log(booking);
+            document.getElementById('eventName').innerText = booking.eventData.name;
+            document.getElementById('eventName2').innerText = booking.eventData.name;
+            document.getElementById('eventDate').innerText = booking.eventData.date;
+            document.getElementById('eventTime').innerText = booking.eventData.time;
+            document.getElementById('eventVenue').innerText = booking.eventData.venue;
+            document.getElementById('eventPrice').innerText = booking.eventData.price;
+            document.getElementById('name').value = booking.name;
+            document.getElementById('email').value = booking.email;
+            document.getElementById('phone').value = booking.phone;
+            // Generate QR Code
+
+            document.getElementById('qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${JSON.stringify(booking)}`;
+
+        } else {
+            console.log("No data available");
+        }
+    }).catch((error) => {
+        console.error(error);
+    });
+
+    document.getElementById('print ticket').addEventListener('click', () => {
+        window.print();
+    });
+
+
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</html>

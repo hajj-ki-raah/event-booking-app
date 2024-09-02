@@ -1,0 +1,21 @@
+.navbar {
+    background-color: #0084ff; /* Sky blue color */
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000;
+}
+.nav-link {
+    color: white;
+    font-size: 14px;
+}
+.nav-item {
+    text-align: center;
+    flex-grow: 1;
+}
+.nav-link.active {
+    color: #ffffff;
+}
+.navbar-icon {
+    font-size: 20px;
+}
